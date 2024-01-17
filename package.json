@@ -1,0 +1,55 @@
+{
+  "private": true,
+  "sideEffects": false,
+  "scripts": {
+    "build": "remix build",
+    "deploy": "wrangler publish server.workers.ts",
+    "dev:remix": "remix watch",
+    "node": "nodemon --watch ./build/server.js ./build/server.js",
+    "node:build": "esbuild --format=esm --bundle --platform=node --watch --outfile=./build/server.js ./server.node.ts",
+    "workers": "wrangler dev server.workers.ts",
+    "bun": "bun run --hot server.bun.ts",
+    "dev:node": "concurrently \"npm:build\" \"npm:dev:remix\" \"npm:node:build\" \"npm:node\"",
+    "dev:bun": "concurrently \"npm:build\" \"npm:dev:remix\" \"npm:bun\"",
+    "dev:workers": "concurrently \"npm:build\" \"npm:dev:remix\" \"npm:workers\"",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.4.0",
+    "@progfay/scrapbox-parser": "^8.1.0",
+    "@remix-run/cloudflare": "^2.4.1",
+    "@remix-run/cloudflare-workers": "^2.5.0",
+    "@remix-run/css-bundle": "^2.5.0",
+    "@remix-run/react": "^2.4.1",
+    "clsx": "^2.1.0",
+    "cross-env": "^7.0.3",
+    "drizzle-orm": "^0.29.3",
+    "hono": "^3.12.1",
+    "isbot": "^4.4.0",
+    "marked": "^11.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-markdown": "^9.0.1",
+    "remix-auth": "^3.6.0",
+    "remix-auth-oauth2": "^1.11.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231218.0",
+    "@remix-run/dev": "^2.4.1",
+    "@remix-run/eslint-config": "^2.5.0",
+    "@types/react": "^18.0.35",
+    "@types/react-dom": "^18.0.11",
+    "concurrently": "^8.0.1",
+    "eslint": "^8.38.0",
+    "miniflare": "^3.20231218.1",
+    "nodemon": "^3.0.2",
+    "npm-run-all": "^4.1.5",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "wrangler": "^3.22.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
