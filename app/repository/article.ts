@@ -59,7 +59,7 @@ export class ArticleD1Repository implements IArticleD1Repository {
 }
 
 @injectable()
-export class D1ArticleRepositoryFactory implements IArticleD1RepositoryFactory {
+export class ArticleD1RepositoryFactory implements IArticleD1RepositoryFactory {
   articleRepository: IArticleD1Repository | undefined;
   create(): IArticleD1Repository {
     this.articleRepository = new ArticleD1Repository(db);
