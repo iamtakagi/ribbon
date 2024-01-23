@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { parseMarkdown } from "../../parser/markdown";
 import MarkdownRenderer from "../../renderer/markdown";
-import ScrapboxRenderer from "../../renderer/scrapbox";
-import { parseScrapbox } from "../../parser/scrapbox";
 import { Article } from "../../parser/types";
 import { Scope, Scopes } from "../../model/scope";
 import { Syntax, Syntaxes } from "../../model/syntax";
@@ -20,25 +18,16 @@ export const Editor = () => {
   const [syntax, setSyntax] = useState<Syntax>(Syntax.Markdown);
   const [scope, setScope] = useState<Scope>(Scope.Private);
   const [raw, setRaw] = useState("");
-  const [struct, setStruct] = useState<Article>(initalArticle);
-  const [structJson, setStructJson] = useState(
-    JSON.stringify(struct, null, "  ")
-  );
+  const [article, setArticle] = useState<Article>(initalArticle);
   useEffect(() => {
     if (raw) {
       if (syntax === Syntax.Markdown) {
-        setStruct(parseMarkdown(raw));
-      }
-      if (syntax === Syntax.Scrapbox) {
-        setStruct(parseScrapbox(raw));
+        setArticle(parseMarkdown(raw));
       }
     } else {
-      setStruct(initalArticle);
+      setArticle(initalArticle);
     }
-    if (struct) {
-      setStructJson(JSON.stringify(struct, null, "  "));
-    }
-  }, [raw, syntax, struct]);
+  }, [raw, syntax]);
   return (
     <div className="editor">
       <div>
@@ -70,9 +59,6 @@ export const Editor = () => {
                 case Syntax.Markdown:
                   return <MarkdownRenderer raw={raw} />;
 
-                case Syntax.Scrapbox:
-                  return <ScrapboxRenderer raw={raw} />;
-
                 default:
                   return <MarkdownRenderer raw={raw} />;
               }
@@ -80,7 +66,7 @@ export const Editor = () => {
           </div>
         </div>
         <textarea
-          value={structJson}
+          value={JSON.stringify(article, null, 2)}
           style={{ width: "300px", height: "360px", resize: "none" }}
         />
       </div>
@@ -96,7 +82,9 @@ export const Editor = () => {
           </option>
         ))}
       </select>
-      <button type="submit">保存</button>
+      <form action="POST">
+        <button type="submit">保存</button>
+      </form>
     </div>
   );
 };
