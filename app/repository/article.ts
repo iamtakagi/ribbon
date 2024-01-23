@@ -1,12 +1,15 @@
 import type { Scope } from "app/model/scope";
-import { db, type Database } from "../connection";
+import { db, type Database } from "../db/connection";
 import type { Syntax } from "app/model/syntax";
-import { articles } from "../schema";
-import type { ArticleRepository, ArticleRepositoryFactory } from "./types";
+import { articles } from "../db/schema";
 import type { Article } from "app/parser/types";
-import type { BooleanResult, ObjectResult, ArrayResult } from "./result";
+import { injectable } from "inversify";
+import "reflect-metadata";
+import type { IArticleRepository, IArticleRepositoryFactory } from "./types";
+import type { ObjectResult, BooleanResult, ArrayResult } from "./result";
 
-export class ArticleRepositoryImpl implements ArticleRepository {
+@injectable()
+export class ArticleRepository implements IArticleRepository {
   #db: Database;
   constructor(db: Database) {
     this.#db = db;
@@ -52,11 +55,11 @@ export class ArticleRepositoryImpl implements ArticleRepository {
   }
 }
 
-export class ArticleRepositoryFactoryImpl implements ArticleRepositoryFactory {
+@injectable()
+export class ArticleRepositoryFactory implements IArticleRepositoryFactory {
+  articleRepository: ArticleRepository | undefined;
   create(): ArticleRepository {
-    return new ArticleRepositoryImpl(db);
+    this.articleRepository = new ArticleRepository(db);
+    return this.articleRepository;
   }
 }
-
-const articleRepository = new ArticleRepositoryFactoryImpl().create();
-export default articleRepository;
