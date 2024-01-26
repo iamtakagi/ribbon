@@ -1,9 +1,9 @@
-import { primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core'
+import { mysqlTable, text  } from "drizzle-orm/mysql-core";
 import { Scopes } from '../model/scope'
-import { Syntaxes } from 'app/model/syntax'
+import { Syntaxes } from '../model/syntax'
 import { nanoid } from 'nanoid'
 
-export const articles = sqliteTable('articles', {
+export const articles = mysqlTable('articles', {
   id: text('id')
     .primaryKey()
     .$defaultFn(() => nanoid()),

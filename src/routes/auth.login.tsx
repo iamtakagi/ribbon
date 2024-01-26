@@ -1,5 +1,5 @@
-import type { ActionFunction, ActionFunctionArgs } from "@remix-run/cloudflare";
-import { redirect } from "@remix-run/cloudflare";
+import type { ActionFunction, ActionFunctionArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { authenticator } from '../authentication/authenticator.server';
 
 export const action: ActionFunction = async ({request, params }: ActionFunctionArgs) => {

@@ -1,20 +1,20 @@
-import type { Scope } from "app/model/scope";
-import { db, type D1 } from "../db/connection";
-import type { Syntax } from "app/model/syntax";
+import type { Scope } from "../model/scope";
+import { db, type DB } from "../db/connection";
+import type { Syntax } from "../model/syntax";
 import { articles } from "../db/schema";
-import type { Article } from "app/parser/types";
+import type { Article } from "../parser/types";
 import { injectable } from "inversify";
 import "reflect-metadata";
 import type {
-  IArticleD1Repository,
-  IArticleD1RepositoryFactory,
+  IArticleRepository,
+  IArticleRepositoryFactory,
 } from "./types";
 import type { ObjectResult, BooleanResult, ArrayResult } from "./result";
 
 @injectable()
-export class ArticleD1Repository implements IArticleD1Repository {
-  db: Readonly<D1>;
-  constructor(db: D1) {
+export class ArticleRepository implements IArticleRepository {
+  db: Readonly<DB>;
+  constructor(db: DB) {
     this.db = db;
   }
 
@@ -26,7 +26,9 @@ export class ArticleD1Repository implements IArticleD1Repository {
     description: string | null,
     raw: string
   ): Promise<ObjectResult<Article>> {
-    const result = await this.db
+    let result;
+    try {
+      result = await this.db
       .insert(articles)
       .values({
         id,
@@ -36,12 +38,15 @@ export class ArticleD1Repository implements IArticleD1Repository {
         description,
         raw,
       })
-      .run();
-    if (result.error) {
-      return { error: result.error };
+      .execute();
+      if (!result) {
+        return { error: result };
+      } 
+    } catch (error) {
+      return { error: { message: "error" }}
     }
     return {
-      object: result.results[0] ? (result.results[0] as Article) : undefined,
+      object: result[0] ? (result[0] as unknown as Article) : undefined,
     };
   }
 
@@ -59,10 +64,10 @@ export class ArticleD1Repository implements IArticleD1Repository {
 }
 
 @injectable()
-export class ArticleD1RepositoryFactory implements IArticleD1RepositoryFactory {
-  articleRepository: IArticleD1Repository | undefined;
-  create(): IArticleD1Repository {
-    this.articleRepository = new ArticleD1Repository(db);
+export class ArticleRepositoryFactory implements IArticleRepositoryFactory {
+  articleRepository: IArticleRepository | undefined;
+  create(): IArticleRepository {
+    this.articleRepository = new ArticleRepository(db);
     return this.articleRepository;
   }
 }

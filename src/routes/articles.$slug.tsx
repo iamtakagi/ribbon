@@ -1,5 +1,5 @@
-import { json} from "@remix-run/cloudflare";
-import type { LoaderFunctionArgs , LoaderFunction, MetaFunction, LinksFunction } from "@remix-run/cloudflare";
+import { json} from "@remix-run/node";
+import type { LoaderFunctionArgs , LoaderFunction, MetaFunction, LinksFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
 type ArticleData = {

@@ -4,14 +4,14 @@ import {
   ActionFunction,
   ActionFunctionArgs,
   redirect,
-} from "@remix-run/cloudflare";
+} from "@remix-run/node";
 import { handleRequireAuth } from "../components/authentication/handleRequireAuth";
 import { Editor } from "../components/editor/Editor";
-import { Scope } from "app/model/scope";
-import { Syntax } from "app/model/syntax";
+import { Scope } from "../model/scope";
+import { Syntax } from "../model/syntax";
 import { nanoid } from "nanoid";
 import container from "../container";
-import { IArticleD1Repository } from "app/repository/types";
+import { IArticleRepository } from "../repository/types";
 
 export const loader: LoaderFunction = async ({ request }) => {
   return await handleRequireAuth(request);
@@ -29,7 +29,7 @@ export const action: ActionFunction = async ({request, params }: ActionFunctionA
   if (title == null || typeof title !== 'string') return redirect("/editor");
   if (description != null && typeof description !== 'string') return redirect("/editor");
   if (raw == null || typeof raw !== 'string') return redirect("/editor");
-  const articleRepository = container.get<IArticleD1Repository>('IArticleD1Repository');
+  const articleRepository = container.get<IArticleRepository>('IArticleRepository');
   const result = await articleRepository.upsertOne(nanoid(), scope as Scope, syntax as Syntax, title, description, raw);
   if (result) return redirect(`/`);
 }

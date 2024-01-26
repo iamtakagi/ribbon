@@ -10,7 +10,7 @@ import {
   LinksFunction,
   LoaderFunction,
   LoaderFunctionArgs,
-} from "@remix-run/cloudflare";
+} from "@remix-run/node";
 import { cssBundleHref } from "@remix-run/css-bundle";
 import { authenticator } from "./authentication/authenticator.server";
 import Header from "./components/global/Header";

@@ -1,10 +1,11 @@
-import type { Scope } from "app/model/scope";
-import type { Syntax } from "app/model/syntax";
-import type { Article } from "app/parser/types";
+import { DB } from "../db/connection";
+import type { Scope } from "../model/scope";
+import type { Syntax } from "../model/syntax";
+import type { Article } from "../parser/types";
 import { ObjectResult, BooleanResult, ArrayResult } from "./result";
-import { D1 } from "app/db/connection";
 
 export interface IArticleRepository {
+  db: Readonly<DB>;
   upsertOne(
     id: string,
     scope: Scope,
@@ -21,13 +22,4 @@ export interface IArticleRepository {
 export interface IArticleRepositoryFactory {
   articleRepository: IArticleRepository | undefined;
   create(): IArticleRepository;
-}
-
-export interface IArticleD1Repository extends IArticleRepository {
-  db: Readonly<D1>;
-}
-
-export interface IArticleD1RepositoryFactory extends IArticleRepositoryFactory {
-  articleRepository: IArticleD1Repository | undefined;
-  create(): IArticleD1Repository;
 }

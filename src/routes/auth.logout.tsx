@@ -1,5 +1,5 @@
-import type { LoaderFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
-import { redirect } from "@remix-run/cloudflare";
+import type { LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { authenticator } from '../authentication/authenticator.server';
 
 export const loader: LoaderFunction = async ({request}: LoaderFunctionArgs) => {

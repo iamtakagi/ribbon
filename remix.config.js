@@ -1,14 +1,11 @@
 /** @type {import('@remix-run/dev').AppConfig} */
-module.exports = {
-  serverConditions: ['worker'],
-  serverDependenciesToBundle: 'all',
-  serverMainFields: ['browser', 'module', 'main'],
-  serverMinify: true,
-  serverModuleFormat: 'esm',
-  serverPlatform: 'neutral',
-  future: {
-    v2_errorBoundary: true,
-    v2_normalizeFormMethod: true,
-    v2_routeConvention: true
-  },
-}
+export default {
+  appDirectory: "src",
+  ignoredRouteFiles: ["**/.*", "**/__tests__/**", "**/*.test.*"],
+  server: "./src/index.ts",
+  serverConditions: ["worker", "browser"],
+  serverMainFields: ["browser", "module", "main"],
+  serverMinify: false,
+  serverModuleFormat: "esm",
+  serverPlatform: "neutral",
+};

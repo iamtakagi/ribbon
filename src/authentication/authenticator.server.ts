@@ -1,6 +1,6 @@
 import { Authenticator } from "remix-auth";
 import { GitHubStrategy } from "./strategy/github";
-import { createCookieSessionStorage } from "@remix-run/cloudflare";
+import { createCookieSessionStorage } from "@remix-run/node";
 import type { OAuth2Profile } from "remix-auth-oauth2";
 import { GoogleStrategy } from "./strategy/google";
 
@@ -22,7 +22,7 @@ export const strategies = [
     {
       clientID: process.env.GITHUB_CLIENT_ID ?? '',
       clientSecret: process.env.GITHUB_CLIENT_SECRET ?? '',
-      callbackURL: (process.env.NODE_ENV !== 'production' ? `http://localhost:3000` : `https://ribbon.iamtakagi.net`) + '/auth/github/callback',
+      callbackURL: (process.env.NODE_ENV !== 'production' ? `http://127.0.0.1:8787` : `https://ribbon.iamtakagi.net`) + '/auth/github/callback',
     },
     async ({ profile }) => {
       return profile;
@@ -32,7 +32,7 @@ export const strategies = [
     {
       clientID: process.env.GOOGLE_CLIENT_ID ?? '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
-      callbackURL: (process.env.NODE_ENV !== 'production' ? `http://localhost:3000` : `https://ribbon.iamtakagi.net`) + '/auth/google/callback',
+      callbackURL: (process.env.NODE_ENV !== 'production' ? `http://127.0.0.1:8787` : `https://ribbon.iamtakagi.net`) + '/auth/google/callback',
     },
     async ({ profile }) => {
       return profile;
