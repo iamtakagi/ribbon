@@ -1,17 +1,15 @@
-import { broadcastDevReady, type ServerBuild } from '@remix-run/node'
+import { broadcastDevReady } from '@remix-run/node'
 import Koa, { type Context } from 'koa'
 import serve from 'koa-static'
 import { createRequestHandler } from './adapter.js'
-import './process'
+import './process.js'
 
 declare module '@remix-run/server-runtime' {
   export interface AppLoadContext extends Context {}
 }
 
 (async () => {
-  const build = (await import(
-    `${process.env.NODE_ENV === 'development' ? '..' : '..'}/build/index.js`
-  )) as ServerBuild
+  const build = await import('../src/index.js') as any
 
   const app = new Koa()
 
@@ -38,19 +36,19 @@ declare module '@remix-run/server-runtime' {
   })
 
   app.use(
-    serve('public/build', {
+    serve('../../public/build', {
       immutable: true,
     }),
   )
 
   app.use(
-    serve('public/fonts', {
+    serve('../../public/fonts', {
       immutable: true,
     }),
   )
 
   app.use(
-    serve('public', {
+    serve('../../public', {
       immutable: false,
     }),
   )
