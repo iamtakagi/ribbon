@@ -6,11 +6,11 @@ import { GoogleStrategy } from "./strategy/google";
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
-    name: "__session",
+    name: "session",
     httpOnly: true,
     path: "/",
     sameSite: "lax",
-    secrets: [process.env.COOKIE_SECRET!],
+    secrets: [process.env.SESSION_SECRET!],
     secure: process.env.NODE_ENV === "production",
   },
 });
