@@ -5,4 +5,8 @@ export default {
   serverBuildPath: './build/src/index.js',
   serverModuleFormat: 'esm',
   ignoredRouteFiles: ['**/.*'],
+  dev: {
+    tlsKey: "./tls/key.pem", // relative to cwd
+    tlsCert: "./tls/cert.pem", // relative to cwd
+  }
 }

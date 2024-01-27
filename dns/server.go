@@ -31,6 +31,7 @@ func main() {
 	})
 
 	server := &dns.Server{Addr: ":53", Net: "udp"}
+
 	fmt.Println("DNS server listening on :53")
 	err := server.ListenAndServe()
 	if err != nil {

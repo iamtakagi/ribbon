@@ -30,7 +30,7 @@ function buildParams(path: string, input: boolean = false) {
     .join(',')
 }
 
-;(async () => {
+(async () => {
   const { routes } = await readConfig()
   const paths = [
     ...new Set(

@@ -2,11 +2,15 @@ import { broadcastDevReady } from '@remix-run/node'
 import Koa, { type Context } from 'koa'
 import serve from 'koa-static'
 import { createRequestHandler } from './adapter.js'
+import fs from 'fs';
+import https from 'https';
 import './process.js'
 
 declare module '@remix-run/server-runtime' {
   export interface AppLoadContext extends Context {}
 }
+
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
 (async () => {
   const build = await import('../src/index.js') as any
@@ -55,10 +59,13 @@ declare module '@remix-run/server-runtime' {
 
   app.use(createRequestHandler({ build, mode: process.env.NODE_ENV, getLoadContext: (ctx) => ctx }))
 
-  app.listen({ port: Number(process.env.PORT) }, () => {
-    console.log(`🚀 To infinity...and beyond!`)
-    if (process.env.NODE_ENV === 'development') {
-      broadcastDevReady(build)
-    }
-  })
+  const options = {
+    key: fs.readFileSync('./tls/key.pem'),
+    cert: fs.readFileSync('./tls/cert.pem')
+  }
+  
+  https.createServer(options, app.callback()).listen(Number(process.env.PORT));
+  if (process.env.NODE_ENV === 'development') {
+    broadcastDevReady(build)
+  }
 })()

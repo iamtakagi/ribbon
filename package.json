@@ -1,9 +1,9 @@
 {
   "scripts": {
-    "build": "NODE_ENV=development remix build && npx tsc -p tsconfig.build.json",
+    "build": "NODE_ENV=development remix build && tsx generate-remix-routes.ts && npx tsc -p tsconfig.build.json",
     "dev:server": "nodemon ./build/server/index.js --watch",
     "dev:remix": "remix watch",
-    "dev": "NODE_ENV=development PORT=3000 REMIX_DEV_ORIGIN=http://localhost:3000 concurrently \"npm:dev:remix\" \"npm:dev:server\""
+    "dev": "NODE_ENV=development PORT=3000 REMIX_DEV_ORIGIN=https://local.ribbon.dev:3000 SESSION_SECRET=犬犬犬犬犬犬犬犬犬 GITHUB_CLIENT_ID=202c6dc8d6e47b9d9802 GITHUB_CLIENT_SECRET=6bf93d2c87b7bd1e97be60979d0f6e781f5850c5 remix dev --tls-key=tls/key.pem --tls-cert=tls/cert.pem -c 'nodemon ./build/server/index.js'"
   },
   "type": "module",
   "dependencies": {
