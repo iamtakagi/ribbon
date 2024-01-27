@@ -1,11 +1,8 @@
 /** @type {import('@remix-run/dev').AppConfig} */
 export default {
-  appDirectory: "src",
-  ignoredRouteFiles: ["**/.*", "**/__tests__/**", "**/*.test.*"],
-  server: "./src/index.ts",
-  serverConditions: ["worker", "browser"],
-  serverMainFields: ["browser", "module", "main"],
-  serverMinify: false,
-  serverModuleFormat: "esm",
-  serverPlatform: "neutral",
-};
+  appDirectory: "./src",
+  assetsBuildDirectory: "./public/build",
+  serverBuildPath: './build/src/index.js',
+  serverModuleFormat: 'esm',
+  ignoredRouteFiles: ['**/.*'],
+}
