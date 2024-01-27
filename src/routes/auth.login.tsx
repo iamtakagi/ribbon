@@ -3,12 +3,12 @@ import { redirect } from "@remix-run/node";
 import { authenticator } from '../authentication/authenticator.server';
 
 export const action: ActionFunction = async ({request, params }: ActionFunctionArgs) => {
-  let user = await authenticator.isAuthenticated(request);
+  let user = await authenticator.isAuthenticated(request.clone());
   if (user) return redirect("/");
-  const body = await request.formData();
+  const body = await request.clone().formData();
   const strategy = body.get("strategy");
   if (!strategy || typeof strategy !== 'string') return redirect("/auth/login");
-  return await authenticator.authenticate(strategy, request);
+  await authenticator.authenticate(strategy, request.clone());
 }
 
 const strategies: Record<string, string> = {
