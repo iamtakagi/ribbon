@@ -1,9 +1,30 @@
 import { PassThrough } from 'node:stream'
 import type { AppLoadContext, DataFunctionArgs, EntryContext } from '@remix-run/node'
-import { createReadableStreamFromReadable } from '@remix-run/node'
+import { createReadableStreamFromReadable, json } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
 import { isbot } from 'isbot'
 import { renderToPipeableStream } from 'react-dom/server'
+
+type ENV = {
+  ENV: string
+  BUILD_VERSION: string
+}
+
+declare global {
+  var ENV: ENV
+  interface Window {
+    ENV: ENV
+  }
+}
+
+export function loader() {
+  return json({
+    ENV: {
+      ENV: process.env.ENV,
+      BUILD_VERSION: process.env.BUILD_VERSION,
+    },
+  })
+}
 
 const ABORT_DELAY = 5_000
 
