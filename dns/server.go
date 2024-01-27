@@ -1,7 +1,5 @@
 package main
 
-// Inspired by https://github.com/tianon/rawdns
-
 import (
 	"flag"
 	"log"
