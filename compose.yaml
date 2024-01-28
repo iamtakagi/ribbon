@@ -1,0 +1,25 @@
+services:
+  app:
+    image: ribbon/app
+    ports:
+      - "443:443"
+    volumes:
+      - ./app:/app
+    links:
+      - db
+  db:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+    volumes:
+      - ./db:/var/lib/mysql
+  dns:
+    image: ribbon/dns
+    ports:
+      - "53:53"
+      - "53:53/udp"
