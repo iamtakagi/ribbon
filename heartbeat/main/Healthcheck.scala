@@ -14,7 +14,7 @@ class HeartbeatTask extends TimerTask {
     @Override
     public void run() {
         // Perform the health check here
-        String url = "https://ribbon.local.dev/ping";
+        String url = "https://local.ribbon.dev/ping";
         // Add your code to send a request to the URL and check the response
         // You can use libraries like Apache HttpClient or Java's HttpURLConnection
         // to send the HTTP request and process the response.
