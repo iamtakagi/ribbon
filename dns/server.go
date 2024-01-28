@@ -12,38 +12,41 @@ import (
 )
 
 var (
-	domain      = flag.String("domain", "local.ribbon.dev", "wildcard domain")
-	domainIp    = flag.String("ip", "127.0.0.1", "where domain should resolve")
-	nameservers = flag.String("nameservers", "8.8.8.8,8.8.4.4", "nameservers for forwarding")
+	records     = []string{"local.ribbon.dev.", "translate.local.ribbon.dev."}
+	address     = "127.0.0.1"
+	nameservers = []string{"8.8.8.8", "8.8.4.4"}
 )
 
 func main() {
 	flag.Parse()
-	log.Printf("Serving %s->%s and forwarding rest to %s\n", *domain, *domainIp, *nameservers)
-
-	dns.HandleFunc(*domain+".", func(w dns.ResponseWriter, req *dns.Msg) {
-		m := new(dns.Msg)
-		m.SetReply(req)
-		m.Authoritative = true
-		defer w.WriteMsg(m)
-
-		for _, q := range req.Question {
-			log.Printf("Resolve DNS query for %#v to %s", q.Name, *domainIp)
-			m.Answer = append(m.Answer, &dns.A{
-				A:   net.ParseIP(*domainIp),
-				Hdr: dns.RR_Header{Name: q.Name, Class: q.Qclass, Ttl: 0, Rrtype: dns.TypeA},
-			})
-		}
-	})
+	log.Printf("Serving %s->%s and forwarding rest to %s\n", records, address, nameservers)
 
 	dns.HandleFunc(".", func(w dns.ResponseWriter, req *dns.Msg) {
 		for _, q := range req.Question {
-			log.Printf("Forward DNS query for %#v", q.Name)
+			log.Printf("DNS query for %#v", q.Name)
+
+			for _, record := range records {
+				if strings.HasSuffix(q.Name, record) {
+					m := new(dns.Msg)
+					m.SetReply(req)
+					m.Authoritative = true
+					defer w.WriteMsg(m)
+
+					log.Printf("Resolve DNS query for %#v to %s", q.Name, address)
+					m.Answer = append(m.Answer, &dns.A{
+						A:   net.ParseIP(address),
+						Hdr: dns.RR_Header{Name: q.Name, Class: q.Qclass, Ttl: 0, Rrtype: dns.TypeA},
+					})
+					return
+				}
+			}
 		}
+
+		log.Println("Forwarding DNS query")
 
 		client := &dns.Client{Net: "udp", SingleInflight: true}
 
-		for _, ns := range strings.Split(*nameservers, ",") {
+		for _, ns := range nameservers {
 			if r, _, err := client.Exchange(req, ns+":53"); err == nil {
 				if r.Rcode == dns.RcodeSuccess {
 					r.Compress = true
@@ -56,7 +59,7 @@ func main() {
 			}
 		}
 
-		log.Println("failure to forward request")
+		log.Println("Failure to forward request")
 		m := new(dns.Msg)
 		m.SetReply(req)
 		m.SetRcode(req, dns.RcodeServerFailure)
