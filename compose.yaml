@@ -2,7 +2,7 @@ services:
   app:
     image: ribbon/app
     ports:
-      - "443:443"
+      - 443:443/tcp
     volumes:
       - ./app:/app
     links:
@@ -19,7 +19,15 @@ services:
     volumes:
       - ./db:/var/lib/mysql
   dns:
-    image: ribbon/dns
+    container_name: nadeco
+    image: nadeco:latest
+    build:
+      context: ./nadeco
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./nadeco/config.yaml:/config.yaml
     ports:
-      - "53:53"
-      - "53:53/udp"
+      - 53:53/udp
